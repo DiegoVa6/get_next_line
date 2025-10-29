@@ -36,7 +36,7 @@ char	*ft_line(char *str)
 
 char	*ft_endline(char *str)
 {
-	int	i;
+	int		i;
 	char	*line;
 
 	i = 0;
@@ -52,31 +52,38 @@ char	*ft_endline(char *str)
 		i++;
 	}
 	line[i] = '\0';
-	str = NULL;
 	return (line);
 }
 
-char	*new_line(char *str)
+char	*new_line(char **str)
 {
 	char	*line;
 	char	*chr;
+	char	*rest;
 
-	if (str[0] == '\0')
+	if (!str || !*str || (**str == '\0'))
 		return (NULL);
-	chr = ft_strchr(str, '\n');
+	chr = ft_strchr(*str, '\n');
 	if (chr)
 	{
-		line = ft_line(str);
-		str = chr;
+		line = ft_line(*str);
+		if (chr[1] != '\0')
+			rest = ft_strdup(chr + 1);
+		else
+			rest = NULL;
+		free(*str);
+		*str = rest;
+		return (line);
 	}
-	else
-		line = ft_endline(str);
+	line = ft_endline(*str);
+	free(*str);
+	*str = NULL;
 	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	ssize_t 	bytesr;
+	ssize_t		bytesr;
 	char		*buffer;
 	static char	*str;
 
@@ -97,7 +104,7 @@ char	*get_next_line(int fd)
 		str = ft_strappend(str, buffer);
 		free(buffer);
 		if (bytesr == 0)
-			return(new_line(str));
+			break ;
 	}
-	return(new_line(str));
+	return (new_line(&str));
 }
