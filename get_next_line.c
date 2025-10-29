@@ -21,26 +21,56 @@ char	*ft_line(char *str)
 	while (str[i] != '\n')
 		i++;
 	line = malloc(sizeof(char) * (i + 2));
+	if (line == NULL)
+		return (NULL);
 	i = 0;
 	while (str[i] != '\n')
-                {
-                        line[i] = str[i];
-                        i++;
-                }
+	{
+		line[i] = str[i];
+		i++;
+	}
 	line[i] = '\n';
 	line[i + 1] = '\0';
+	return (line);
+}
+
+char	*ft_endline(char *str)
+{
+	int	i;
+	char	*line;
+
+	i = 0;
+	while (str[i] != '\0')
+		i++;
+	line = malloc(i + 1);
+	if (line == NULL)
+		return (NULL);
+	i = 0;
+	while (str[i] != '\0')
+	{
+		line[i] = str[i];
+		i++;
+	}
+	line[i] = '\0';
+	str = NULL;
+	return (line);
 }
 
 char	*new_line(char *str)
 {
-	int	i;
-	char	*chr;
 	char	*line;
+	char	*chr;
 
-	i = 0;
+	if (str[0] == '\0')
+		return (NULL);
 	chr = ft_strchr(str, '\n');
 	if (chr)
+	{
 		line = ft_line(str);
+		str = chr;
+	}
+	else
+		line = ft_endline(str);
 	return (line);
 }
 
@@ -52,20 +82,13 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (!str)
-	{
-		str = (char *)malloc(1);
-		if (!str)
-			return NULL;
-		str[0] = '\0';
-	}
-	while (!ft_strchr(str, '\n'))
+	while (str == NULL || !(ft_strchr(str, '\n')))
 	{
 		buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 		if (!buffer)
 			return (NULL);
 		bytesr = read(fd, buffer, BUFFER_SIZE);
-		if (bytesr <= 0)
+		if (bytesr == -1)
 		{
 			free(buffer);
 			return (NULL);
@@ -73,15 +96,8 @@ char	*get_next_line(int fd)
 		buffer[bytesr] = '\0';
 		str = ft_strappend(str, buffer);
 		free(buffer);
+		if (bytesr == 0)
+			return(new_line(str));
 	}
 	return(new_line(str));
-}
-
-int	main(void)
-{
-	int	fd;
-
-	fd = open("prueba.txt", O_RDONLY);
-	get_next_line(fd);
-	return (0);
 }
