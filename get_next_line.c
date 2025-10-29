@@ -10,15 +10,38 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#define BUFF_SIZE 1024
+#include "get_next_line.h"
 
-void	new_line(char *str)
+char	*ft_line(char *str)
 {
-	int	i;
+	size_t	i;
+	char	*line;
 
 	i = 0;
-	while (str[i] != \n || str[i] != \0)
+	while (str[i] != '\n')
+		i++;
+	line = malloc(sizeof(char) * (i + 2));
+	i = 0;
+	while (str[i] != '\n')
+                {
+                        line[i] = str[i];
+                        i++;
+                }
+	line[i] = '\n';
+	line[i + 1] = '\0';
+}
+
+char	*new_line(char *str)
+{
+	int	i;
+	char	*chr;
+	char	*line;
+
+	i = 0;
+	chr = ft_strchr(str, '\n');
+	if (chr)
+		line = ft_line(str);
+	return (line);
 }
 
 char	*get_next_line(int fd)
@@ -27,15 +50,31 @@ char	*get_next_line(int fd)
 	char		*buffer;
 	static char	*str;
 
-	if (fd < 0 || BUFF_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buffer = malloc(sizeof(char) * (BUFF_SIZE + 1));
-	if (!buffer)
-		return (NULL);
-	bytesr = read(fd, buffer, BUFF_SIZE);
-	if (bytesr < 0)
-		return (NULL);
-	ft_strjoin(str, buffer);
+	if (!str)
+	{
+		str = (char *)malloc(1);
+		if (!str)
+			return NULL;
+		str[0] = '\0';
+	}
+	while (!ft_strchr(str, '\n'))
+	{
+		buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+		if (!buffer)
+			return (NULL);
+		bytesr = read(fd, buffer, BUFFER_SIZE);
+		if (bytesr <= 0)
+		{
+			free(buffer);
+			return (NULL);
+		}
+		buffer[bytesr] = '\0';
+		str = ft_strappend(str, buffer);
+		free(buffer);
+	}
+	return(new_line(str));
 }
 
 int	main(void)

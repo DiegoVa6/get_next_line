@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "get_next_line.h"
+
 char	*ft_strchr(const char *s, int c)
 {
 	unsigned char	t;
@@ -26,22 +28,55 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strappend(char *s1, char const *s2)
 {
 	size_t	l1;
 	size_t	l2;
 	char	*str;
 
-	if (!s1 || !s2)
-		return (NULL);
+	if (!s2)
+		return (s1);
 	l1 = ft_strlen(s1);
 	l2 = ft_strlen(s2);
 	str = (char *)malloc(l1 + l2 + 1);
 	if (str == NULL)
+	{
+		free(s1);
 		return (str);
+	}
 	ft_memcpy(str, s1, l1);
 	ft_memcpy(str + l1, s2, l2);
 	str[l1 + l2] = '\0';
+	free(s1);
 	return (str);
 }
 
+size_t  ft_strlen(const char *s)
+{
+        size_t  c;
+
+        c = 0;
+        while (*s != '\0')
+        {
+                c++;
+                s++;
+        }
+        return (c);
+}
+
+void    *ft_memcpy(void *dest, const void *src, size_t n)
+{
+        unsigned char   *a;
+        unsigned char   *b;
+
+        a = (unsigned char *)src;
+        b = (unsigned char *)dest;
+        while (n > 0)
+        {
+                *b = *a;
+                b++;
+                a++;
+                n--;
+        }
+        return (dest);
+}
