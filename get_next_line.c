@@ -55,26 +55,38 @@ char	*ft_endline(char *str)
 	return (line);
 }
 
+static char	*gnl_take_until_nl(char **str, char *nl)
+{
+	char	*line;
+	char	*rest;
+
+	line = ft_line(*str);
+	if (nl[1] != '\0')
+		rest = ft_strdup(nl + 1);
+	else
+		rest = NULL;
+	free(*str);
+	*str = rest;
+	return (line);
+}
+
 char	*new_line(char **str)
 {
 	char	*line;
 	char	*chr;
-	char	*rest;
 
 	if (!str || !*str || (**str == '\0'))
+	{
+		if (str && *str)
+		{
+			free(*str);
+			*str = NULL;
+		}
 		return (NULL);
+	}
 	chr = ft_strchr(*str, '\n');
 	if (chr)
-	{
-		line = ft_line(*str);
-		if (chr[1] != '\0')
-			rest = ft_strdup(chr + 1);
-		else
-			rest = NULL;
-		free(*str);
-		*str = rest;
-		return (line);
-	}
+		return (gnl_take_until_nl(str, chr));
 	line = ft_endline(*str);
 	free(*str);
 	*str = NULL;
