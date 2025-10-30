@@ -72,34 +72,38 @@ char	*new_line(char **str)
 	return (line);
 }
 
-char *get_next_line(int fd)
+static char	*buffer_str_free(char **str, char **buffer)
 {
-	ssize_t bytesr;
-	char *buffer;
-	static char *str;
+	free(*buffer);
+	free(*str);
+	*str = NULL;
+	return (NULL);
+}
+
+char	*get_next_line(int fd)
+{
+	ssize_t		bytesr;
+	char		*buffer;
+	static char	*str;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	if (str == NULL || !(ft_strchr(str, '\n')))
 	{
 		buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
-        	if (!buffer)
-                	return (NULL);
+		if (!buffer)
+			return (NULL);
 		while (1)
 		{
 			bytesr = read(fd, buffer, BUFFER_SIZE);
 			if (bytesr == -1)
-			{
-				free(buffer);
-				str = NULL;
-				return (NULL);
-			}
+				return (buffer_str_free(&str, &buffer));
 			buffer[bytesr] = '\0';
 			str = ft_strappend(str, buffer);
 			if (ft_strchr(buffer, '\n') || bytesr == 0)
 				break ;
 		}
-	free(buffer);
+		free(buffer);
 	}
 	return (new_line(&str));
 }
