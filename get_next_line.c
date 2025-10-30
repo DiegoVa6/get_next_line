@@ -49,7 +49,7 @@ char	*new_line(char **str)
 	char	*chr;
 	char	*rest;
 
-	if (**str == '\0')
+	if (!*str || **str == '\0')
 	{
 		free(*str);
 		*str = NULL;
@@ -82,28 +82,24 @@ char *get_next_line(int fd)
 		return (NULL);
 	if (str == NULL || !(ft_strchr(str, '\n')))
 	{
+		buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
+        	if (!buffer)
+                	return (NULL);
 		while (1)
 		{
-			buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-			if (!buffer)
-				return (NULL);
 			bytesr = read(fd, buffer, BUFFER_SIZE);
 			if (bytesr == -1)
 			{
 				free(buffer);
+				str = NULL;
 				return (NULL);
 			}
 			buffer[bytesr] = '\0';
 			str = ft_strappend(str, buffer);
-			if (ft_strchr(buffer, '\n'))
-			{
-				free(buffer);
-				break ;
-			}
-			free(buffer);
-			if (bytesr == 0)
+			if (ft_strchr(buffer, '\n') || bytesr == 0)
 				break ;
 		}
+	free(buffer);
 	}
 	return (new_line(&str));
 }
