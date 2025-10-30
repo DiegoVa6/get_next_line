@@ -89,13 +89,15 @@ char	*ft_strappend(char *s1, char const *s2)
 		return (s1);
 	if (s1 == NULL)
 		return (ft_strdup(s2));
+	if (s2[0] == '\0')
+		return (s1);
 	l1 = ft_strlen(s1);
 	l2 = ft_strlen(s2);
 	str = (char *)malloc(l1 + l2 + 1);
 	if (str == NULL)
 	{
 		free(s1);
-		return (str);
+		return (NULL);
 	}
 	ft_memcpy(str, s1, l1);
 	ft_memcpy(str + l1, s2, l2);
