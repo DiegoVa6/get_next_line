@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dvallada <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/25 17:02:11 by dvallada          #+#    #+#             */
-/*   Updated: 2025/10/31 14:13:22 by dvallada         ###   ########.fr       */
+/*   Updated: 2025/10/31 15:16:31 by dvallada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,11 +84,11 @@ char	*get_next_line(int fd)
 {
 	ssize_t		bytesr;
 	char		*buffer;
-	static char	*str;
+	static char	*str[1024];
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (str == NULL || !(ft_strchr(str, '\n')))
+	if (str[fd] == NULL || !(ft_strchr(str[fd], '\n')))
 	{
 		buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 		if (!buffer)
@@ -97,13 +97,13 @@ char	*get_next_line(int fd)
 		{
 			bytesr = read(fd, buffer, BUFFER_SIZE);
 			if (bytesr == -1)
-				return (buffer_str_free(&str, &buffer));
+				return (buffer_str_free(&str[fd], &buffer));
 			buffer[bytesr] = '\0';
-			str = ft_strappend(str, buffer);
+			str[fd] = ft_strappend(str[fd], buffer);
 			if (ft_strchr(buffer, '\n') || bytesr == 0)
 				break ;
 		}
 		free(buffer);
 	}
-	return (new_line(&str));
+	return (new_line(&str[fd]));
 }
