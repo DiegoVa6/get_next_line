@@ -6,11 +6,11 @@
 /*   By: dvallada <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/25 17:02:11 by dvallada          #+#    #+#             */
-/*   Updated: 2025/10/31 15:16:31 by dvallada         ###   ########.fr       */
+/*   Updated: 2025/11/04 12:45:23 by dvallada         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_line(char *str)
 {
