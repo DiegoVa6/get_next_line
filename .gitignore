@@ -1,0 +1,17 @@
+# Object files
+*.o
+
+# Static library
+libgnl.a
+
+# Executables
+a.out
+*.out
+test_gnl
+
+# VSCode / editor backups
+*~
+*.swp
+
+# macOS junk
+.DS_Store
