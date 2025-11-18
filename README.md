@@ -27,7 +27,7 @@ character \n if present. It must work with:
 - Multiple file descriptors at the same time
 
 - Bonus version with independent buffers per fd
-
+```
 The function must be memory safe, handle partial reads, and avoid leaks,
 double frees, and undefined behavior.
 
@@ -51,12 +51,13 @@ Supports multiple fds at once
 Each fd keeps its own internal buffer
 
 Works with parallel reads like:
-
+```text
 get_next_line(fd1);
 get_next_line(fd2);
 get_next_line(fd1);
-
+```
 📁 Project Structure
+```text
 src/
   get_next_line.c
   get_next_line_utils.c
@@ -78,38 +79,40 @@ Makefile
 LICENSE
 .gitignore
 README.md
-
+```
 🔧 How to Compile
 Build mandatory version
+```text
 cc -Wall -Werror -Wextra -Iinclude src/get_next_line.c src/get_next_line_utils.c -c
 ar rcs libgnl.a get_next_line.o get_next_line_utils.o
-
+```
 Build mandatory + bonus
+```text
 make bonus
-
+```
 
 (If you add a Makefile that supports this — recommended for future projects.)
 
 🧪 Example Test Program
 
 You can test your function using the file in tests/main.c:
-
+```text
 cc tests/main.c -L. -lgnl -Iinclude -o test_gnl
 ./test_gnl
-
+```
 
 Or test individual files:
-
+```text
 ./test_gnl tests/test1.txt
 ./test_gnl tests/test2.txt
-
+```
 
 You can also test it with standard input:
-
+```text
 ./test_gnl
 <write something>
 <press CTRL + D>
-
+```
 📚 What I Learned
 
 File descriptor operations (read)
