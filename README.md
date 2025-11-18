@@ -91,8 +91,6 @@ Build mandatory + bonus
 make bonus
 ```
 
-(If you add a Makefile that supports this — recommended for future projects.)
-
 🧪 Example Test Program
 
 You can test your function using the file in tests/main.c:
